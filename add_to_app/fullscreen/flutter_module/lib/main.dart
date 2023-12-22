@@ -45,6 +45,11 @@ class CounterModel extends ChangeNotifier {
     _channel.invokeMethod<void>('incrementCounter');
   }
 
+  void exit() {
+    SystemNavigator.pop();
+    _channel.invokeMethod<void>('exit');
+  }
+
   Future<dynamic> _handleMessage(MethodCall call) async {
     if (call.method == 'reportCounter') {
       _count = call.arguments as int;
@@ -151,10 +156,12 @@ class Contents extends StatelessWidget {
                 ),
                 if (showExit) ...[
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => SystemNavigator.pop(animated: true),
-                    child: const Text('Exit this screen'),
-                  ),
+                  Consumer<CounterModel>(builder: (context, model, child) {
+                    return ElevatedButton(
+                      onPressed: () => model.exit(),
+                      child: const Text('Exit this screen'),
+                    );
+                  })
                 ],
               ],
             ),
