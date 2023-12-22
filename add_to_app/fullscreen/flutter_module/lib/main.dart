@@ -46,7 +46,7 @@ class CounterModel extends ChangeNotifier {
   }
 
   void exit() {
-    SystemNavigator.pop();
+    //SystemNavigator.pop();
     _channel.invokeMethod<void>('exit');
   }
 
