@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">AndroidUsingPrebuiltModule</string>
+    <string-array name="com.google.firebase.crashlytics.build_ids_lib" translatable="false">
+        <item>flutter_module_arm</item>
+        <item>flutter_module_arm64</item>
+        <item>flutter_module_x86</item>
+    </string-array>
+    <string-array name="com.google.firebase.crashlytics.build_ids_arch" translatable="false">
+        <item>armeabi-v7a</item>
+        <item>arm64-v8a</item>
+        <item>x86</item>
+    </string-array>
+    <string-array name="com.google.firebase.crashlytics.build_ids_build_id" translatable="false">
+        <item>76162c8dbec5b2d5d841697dd93c90cb</item>
+        <item>349b9003bc56f804af40333afce3eca3</item>
+        <item>75c4cffe0f3c4da018656ce0a7901991</item>
+    </string-array>
 </resources>
