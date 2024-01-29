@@ -4,8 +4,8 @@
 
 package dev.flutter.example.androidusingprebuiltmodule
 
-import android.util.Log
 import androidx.multidex.MultiDexApplication
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
@@ -38,9 +38,11 @@ class MyApplication : MultiDexApplication() {
                     count++
                     reportCounter()
                 }
+
                 "requestCounter" -> {
                     reportCounter()
                 }
+
                 "reportException" -> {
                     val stack = call.argument<String>("stack")!!
                     reportException(stack)
@@ -53,7 +55,52 @@ class MyApplication : MultiDexApplication() {
         channel.invokeMethod("reportCounter", count)
     }
 
-    private fun reportException(stack: String) {
-        Log.d("shigueto", "stack=$stack")
+    private fun reportException(stackTrace: String) {
+        val message = "Flutter Exception"
+        val elements = ArrayList<StackTraceElement>()
+        // Use regex to remove lines that starts with *** ***
+        val regex = Regex(
+            "^(pid:|os:|isolate.*:|build_id:|\\*\\*\\* \\*\\*\\*).*\n",
+            setOf(RegexOption.MULTILINE)
+        )
+        val stack = stackTrace.replace(regex, "")
+        stack.split('\n').forEach { stackLine ->
+            val stackElement = generateTraceElement(stackLine)
+            elements.add(element = stackElement)
+        }
+        val e = FlutterException(message, message)
+        e.stackTrace = elements.toTypedArray()
+        FirebaseCrashlytics.getInstance().recordException(e)
+    }
+
+    private fun generateTraceElement(stackInfo: String): StackTraceElement {
+        val declaringClass = ""
+        val fileName = null
+        val lineNumber = -2
+        return StackTraceElement(declaringClass, stackInfo, fileName, lineNumber)
+    }
+}
+
+
+class FlutterException internal constructor(message: String?, cause: String?) :
+    Throwable(
+        message,
+        FlutterCause(cause),
+        false,
+        true
+    )
+
+
+class FlutterCause internal constructor(cause: String?) : Throwable(
+    cause,
+    null,
+    false,
+    true
+) {
+    init {
+        val elements = arrayOf(
+            StackTraceElement("", cause, null, -2)
+        )
+        stackTrace = elements
     }
 }

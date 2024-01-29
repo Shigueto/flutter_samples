@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import io.flutter.embedding.android.FlutterActivity
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var counterLabel: TextView
@@ -27,6 +28,11 @@ class MainActivity : AppCompatActivity() {
                 .build(this)
             startActivity(intent)
         }
+        val crashButton = findViewById<Button>(R.id.crashlytics_exception)
+        crashButton.setOnClickListener {
+            throw RuntimeException("teste")
+        }
+
     }
 
     override fun onResume() {
