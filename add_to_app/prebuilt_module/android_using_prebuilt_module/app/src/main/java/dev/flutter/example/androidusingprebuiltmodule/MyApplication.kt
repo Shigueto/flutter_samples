@@ -4,6 +4,7 @@
 
 package dev.flutter.example.androidusingprebuiltmodule
 
+import android.util.Log
 import androidx.multidex.MultiDexApplication
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -40,11 +41,19 @@ class MyApplication : MultiDexApplication() {
                 "requestCounter" -> {
                     reportCounter()
                 }
+                "reportException" -> {
+                    val stack = call.argument<String>("stack")!!
+                    reportException(stack)
+                }
             }
         }
     }
 
     private fun reportCounter() {
         channel.invokeMethod("reportCounter", count)
+    }
+
+    private fun reportException(stack: String) {
+        Log.d("shigueto", "stack=$stack")
     }
 }

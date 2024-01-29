@@ -156,11 +156,30 @@ class Contents extends StatelessWidget {
                     child: const Text('Exit this screen'),
                   ),
                 ],
+                Consumer<CounterModel>(
+                  builder: (context, model, child) {
+                    return ElevatedButton(
+                      onPressed: () => _reportError(model),
+                      child: const Text('Report exception'),
+                    );
+                  },
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _reportError(CounterModel model) {
+    debugPrint("reporting an exception");
+    try {
+      throw FlutterError('Forced crash');
+    } on FlutterError catch (error, stack) {
+      model._channel.invokeMethod<void>('reportException', {
+        "stack": stack.toString(),
+      });
+    }
   }
 }
