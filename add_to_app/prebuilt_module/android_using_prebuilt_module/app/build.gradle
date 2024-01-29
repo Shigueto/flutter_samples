@@ -22,7 +22,7 @@ android {
             minifyEnabled false
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
-                unstrippedNativeLibsDir '../flutter_module/symbols'
+                unstrippedNativeLibsDir '../../flutter_module/symbols'
             }
         }
     }
